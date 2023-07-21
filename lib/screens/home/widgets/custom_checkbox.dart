@@ -1,15 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatelessWidget {
   const CustomCheckBox(
       {super.key,
       required this.type,
-      required this.value,
-      required this.onChanged});
+      required this.onChanged,
+      required this.valueListenable});
 
   final String type;
-  final bool value;
   final Function onChanged;
+  final ValueListenable<bool> valueListenable;
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,16 @@ class CustomCheckBox extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(type),
-        Checkbox(
-          value: value,
-          onChanged: onChanged(value, type),
+        ValueListenableBuilder(
+          valueListenable: valueListenable,
+          builder: (context, valueListenableValue, child) {
+            return Checkbox(
+              value: valueListenableValue,
+              onChanged: (value) {
+                onChanged(value, type);
+              },
+            );
+          },
         ),
       ],
     );

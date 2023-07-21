@@ -15,14 +15,22 @@ void main() {
       expect(loadTasksReturn, true);
     });
 
-    test('should return true for tasks list saved in local storage', () {
-      Task task = Task(
-          title: 'Task One',
-          description: 'teste',
-          date: '27/07/2023',
-          status: 'Pendente');
-      bool registerTaskReturn = homeScreenController.registerTask(task);
+    test('should return true for tasks list saved in local storage', () async {
+      bool registerTaskReturn = await homeScreenController.registerTask(
+          'Task 1', 'Descrição Teste', '27/07/2023');
       expect(registerTaskReturn, true);
+    });
+
+    test('should return true for Pending checkbox marked', () async {
+      homeScreenController.changeCheckBoxValue(true, 'Pendentes');
+      expect(homeScreenController.pendingTasksCheckBox.value, true);
+    });
+
+    test('should validate taskTitle form and return a validate error message',
+        () async {
+      String? validadeErrorMessage =
+          homeScreenController.taskTitleFormValidator('');
+      expect(validadeErrorMessage, 'Escolha um título');
     });
   });
 }
