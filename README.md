@@ -4,13 +4,10 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+A aplicação oferece as funcionalidades de agendamento, atualização e exclusão de tarefas. 
+Foram utilizadas as seguintes bibliotecas: shared preferences, para persistência local dos dados; brasil fields, para a formatação da data; e line awesome flutter para os ícones.
+Foi cogitado o uso da biblioteca Hive para persistência local dos dados, mas devivo ao escopo do projeto, concluí que não seria necessário.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
