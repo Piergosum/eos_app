@@ -26,10 +26,10 @@ class TaskCard extends StatelessWidget {
       if ((convertedDate.year == DateTime.now().year &&
               convertedDate.month == DateTime.now().month &&
               convertedDate.day == DateTime.now().day) ||
-          convertedDate.isAfter(DateTime.now())) {
+          convertedDate.isBefore(DateTime.now())) {
         return Colors.red;
       } else {
-        return Colors.black;
+        return Colors.black45;
       }
     }
 
@@ -151,117 +151,3 @@ class TaskCard extends StatelessWidget {
     );
   }
 }
-
-
-/*return Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  title.toUpperCase(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Vencimento:',
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      date,
-                                      style: TextStyle(
-                                        color: checkDateColor('27/07/2023'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    status,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: status == 'PENDENTE'
-                                            ? Colors.red
-                                            : Colors.green),
-                                  ),
-                                  Expanded(
-                                    child: IconButton(
-                                      tooltip: 'atualizar status',
-                                      onPressed: () async {
-                                        bool result = await homeScreenController
-                                            .updateTaskStatus(title);
-                                        if (result) {
-                                          await homeScreenController
-                                              .loadTasks();
-                                        } else {
-                                          if (context.mounted) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: const Text(
-                                                    'Não foi possível atualizar o status'),
-                                                //backgroundColor: (Colors.black12),
-                                                action: SnackBarAction(
-                                                  label: 'fechar',
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        }
-                                      },
-                                      icon: const Icon(LineAwesomeIcons.edit),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Text(description),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      confirmDeleteTaskPopup.showCustomPopup(
-                          context, title, homeScreenController);
-                    },
-                    icon: const Icon(LineAwesomeIcons.trash),
-                  ),
-                ],
-              ),
-            ],
-          );*/
