@@ -9,7 +9,8 @@ class EosApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(0, 181, 88, 1)),
         useMaterial3: true,
       ),
       home: const Home(),
