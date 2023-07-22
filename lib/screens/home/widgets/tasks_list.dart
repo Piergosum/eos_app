@@ -17,7 +17,7 @@ class TasksList extends StatelessWidget {
               title: list[index].title,
               description: list[index].description,
               date: list[index].date,
-              status: list[index].date);
+              status: list[index].status);
         },
         separatorBuilder: (context, index) {
           return const Divider();

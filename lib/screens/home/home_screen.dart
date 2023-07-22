@@ -2,6 +2,7 @@ import 'package:eos_app/screens/home/controller/home_screen_controller.dart';
 import 'package:eos_app/screens/home/widgets/custom_checkbox.dart';
 import 'package:eos_app/screens/home/widgets/custom_text_form_field.dart';
 import 'package:eos_app/screens/home/widgets/tasks_list.dart';
+import 'package:eos_app/storage/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -26,11 +27,41 @@ class _Home extends State<Home> {
     super.initState();
     _homeScreenController = HomeScreenController();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _homeScreenController.dispose();
+    _taskTitleController.dispose();
+    _taskDescriptionController.dispose();
+    _taskDateController.dispose();
+  }
+
   //CRIAR GETTERS E SETTERS
   //DISPOSE
+  //DATA BRASILFIELDS
 
   @override
   Widget build(BuildContext context) {
+    List<Task> taskListFilter() {
+      print('ENTROU NO FILTRO');
+      if (_homeScreenController.selectedCheckBox == 'Todas') {
+        return _homeScreenController.tasksList;
+      } else {
+        List<Task> filteredList = [];
+        for (Task task in _homeScreenController.tasksList) {
+          if (task.status ==
+              _homeScreenController.selectedCheckBox
+                  .substring(
+                      0, _homeScreenController.selectedCheckBox.length - 1)
+                  .toUpperCase()) {
+            filteredList.add(task);
+          }
+        }
+        return filteredList;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -106,18 +137,19 @@ class _Home extends State<Home> {
                           return ValueListenableBuilder(
                             valueListenable: _homeScreenController.tasksLoading,
                             builder: (context, value, child) {
+                              print('BUILDOU');
                               if (value) {
+                                print('CHAMOUUUU');
                                 return const CircularProgressIndicator();
                               } else {
+                                List<Task> filteredTaskList = taskListFilter();
                                 return Column(
                                   children: [
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    _homeScreenController.tasksList.isNotEmpty
-                                        ? TasksList(
-                                            list:
-                                                _homeScreenController.tasksList)
+                                    filteredTaskList.isNotEmpty
+                                        ? TasksList(list: filteredTaskList)
                                         : const Center(
                                             child: Text(
                                                 'Nenhuma tarefa registrada'),
@@ -198,20 +230,33 @@ class _Home extends State<Home> {
                                 const SizedBox(
                                   height: 30,
                                 ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    if (_registerTaskFormKey.currentState!
-                                        .validate()) {
-                                      await _homeScreenController.registerTask(
-                                          _taskTitleController.text,
-                                          _taskDescriptionController.text,
-                                          _taskDateController.text);
-                                    }
-                                    _taskTitleController.clear();
-                                    _taskDescriptionController.clear();
-                                    _taskDateController.clear();
+                                ValueListenableBuilder(
+                                  valueListenable:
+                                      _homeScreenController.registerLoading,
+                                  builder: (context, value, child) {
+                                    return ElevatedButton(
+                                      onPressed: () async {
+                                        if (_registerTaskFormKey.currentState!
+                                            .validate()) {
+                                          await _homeScreenController
+                                              .registerTask(
+                                                  _taskTitleController.text,
+                                                  _taskDescriptionController
+                                                      .text,
+                                                  _taskDateController.text);
+                                        }
+                                        _taskTitleController.clear();
+                                        _taskDescriptionController.clear();
+                                        _taskDateController.clear();
+                                      },
+                                      child: value
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : const Text('Registrar'),
+                                    );
                                   },
-                                  child: const Text('Registrar'),
                                 )
                               ],
                             ),

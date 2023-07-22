@@ -4,20 +4,23 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 class HomeScreenController extends ChangeNotifier {
-  ValueNotifier<bool> allTasksCheckBox = ValueNotifier(true);
+  ValueNotifier<bool> allTasksCheckBox = ValueNotifier(false);
 
   ValueNotifier<bool> completedTasksCheckBox = ValueNotifier(false);
 
-  ValueNotifier<bool> pendingTasksCheckBox = ValueNotifier(false);
+  ValueNotifier<bool> pendingTasksCheckBox = ValueNotifier(true);
+
+  ValueNotifier<bool> registerLoading = ValueNotifier(false);
 
   ValueNotifier<bool> tasksLoading = ValueNotifier(false);
 
-  String selectedCheckBox = 'Todas';
+  String selectedCheckBox = 'Pendentes';
 
   List<Task> tasksList = [];
 
-  void changeCheckBoxValue(bool value, String type) async {
+  Future<bool> changeCheckBoxValue(bool value, String type) async {
     if (selectedCheckBox != type) {
+      tasksLoading.value = true;
       selectedCheckBox = type;
       switch (type) {
         case 'Todas':
@@ -37,12 +40,15 @@ class HomeScreenController extends ChangeNotifier {
           break;
         default:
       }
-      await loadTasks();
+      bool tasksListLoadStatus = await loadTasks();
+      tasksLoading.value = false;
+      return tasksListLoadStatus;
+    } else {
+      return true;
     }
   }
 
   Future<bool> loadTasks() async {
-    tasksLoading.value = true;
     try {
       List<String> tasksStringList = SharedPreferencesClass.prefsInstance!
               .getStringList('tasksStringList') ??
@@ -58,7 +64,6 @@ class HomeScreenController extends ChangeNotifier {
             ),
           )
           .toList();
-      tasksLoading.value = false;
       return true;
     } catch (e) {
       return false;
@@ -87,19 +92,22 @@ class HomeScreenController extends ChangeNotifier {
 
   Future<bool> registerTask(
       String title, String description, String date) async {
+    registerLoading.value = true;
+    Task task = Task(
+        title: title, description: description, date: date, status: 'PENDENTE');
     try {
-      Task task = Task(
-          title: title,
-          description: description,
-          date: date,
-          status: 'Pendente');
       Map taskJson = task.toJson();
-      List<String> taskStringListToSave = [];
-      taskStringListToSave.add(jsonEncode(taskJson));
+      List<String> tasksStringListSaved = SharedPreferencesClass.prefsInstance!
+              .getStringList('tasksStringList') ??
+          [];
+      tasksStringListSaved.add(jsonEncode(taskJson));
       SharedPreferencesClass.prefsInstance!
-          .setStringList('tasksStringList', taskStringListToSave);
+          .setStringList('tasksStringList', tasksStringListSaved);
+      registerLoading.value = false;
+      await changeCheckBoxValue(true, 'Todas');
       return true;
     } catch (e) {
+      registerLoading.value = false;
       return false;
     }
   }

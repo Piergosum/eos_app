@@ -1,5 +1,4 @@
 import 'package:eos_app/screens/home/controller/home_screen_controller.dart';
-import 'package:eos_app/storage/models/task.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
